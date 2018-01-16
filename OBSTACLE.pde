@@ -1,7 +1,7 @@
 public class OBSTACLE {
 
   PVector pos = new PVector(random(20, width-120), 1000);
-  float v = 0, a = 0.025;
+  float v = 0, a = 0.05;
   int max = 20;
  
 
@@ -18,7 +18,7 @@ public class OBSTACLE {
     } 
     
     //fall
-    if (v >= -max) v -= a;
+    if (v - a >= -max) v -= a;
     pos.add(0, v);
   }
   void oReset(){
@@ -35,7 +35,5 @@ public class OBSTACLE {
     rect(pos.x-20, pos.y, 20, 30);
     rect(pos.x +100, pos.y, 20 , 30);
   }
-  void jump() {
-    v = 1;
-  }
+ 
 }

@@ -12,7 +12,7 @@ public class STAR {
   void reset() {
     if (pos.y < 0) { 
       pos.set(random(0, width), height+10);
-      c = color(random(100, 255), random(100, 255), random(100, 255));
+      c = color(random(100, 255), random(10, 100), random(100, 255));
       r = random(1, 4);
       v = r/10;
     }
