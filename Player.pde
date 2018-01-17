@@ -5,16 +5,18 @@ public class PLAYER {
   int v = 5;
   int size = 25;
   int w = 25, h = 25;
-  float jumps = 100;
-  int leben = 1;
+  float jumps = 20;
+  int leben = 10;
   int streak = 1;
   boolean hit = false, alive = true;
   boolean right = false;
   boolean left  = false;
   boolean wait = false, jump = false;
   int points = 0;
+  PImage flame;
 
   PLAYER() {
+    flame = loadImage("Flame.png");
 
     pos.set(width/2 -25, 100);
   }
@@ -42,9 +44,8 @@ public class PLAYER {
     if (jumps >= 0.2 ) {
       noStroke();
       fill(255, 155, 0);
-      rect(pos.x, pos.y + h, w, h/2);
-      rect(pos.x + w/4, pos.y+1.5* h - 1, w/2, h/2);
-      rect(pos.x + 7*w/16, pos.y+2*h, w/8, h/2);
+      image(flame, pos.x, pos.y + h, w, h*3/2);
+
 
 
       if (alive)jumps -= 0.2;
@@ -63,6 +64,7 @@ public class PLAYER {
         if (leben <= 0) alive = false;
         hit = true;
         streak = 1;
+        Tsize = 1;
         bgt = 0;
         w = size  + (size*streak /50);
         h =w;
@@ -73,10 +75,13 @@ public class PLAYER {
 
     if (pos.y -100 > o.pos.y && !hit && !wait) {
       streak ++; 
-      points += streak;
+      points += streak-1;
       w = size  + (size*streak /50);
       h =w;
-      if (streak %5 == 0)leben++; 
+      if (streak %5 == 0) {
+        leben++;
+        jumps+=2;
+      }
       wait =true;
     }
   }
