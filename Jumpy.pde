@@ -41,9 +41,9 @@ void draw() {
     fill(255, 0, 0);
     text(p.leben, 10, 60);
     fill(0, 255, 0);
-    if((10^Tsize) % (p.streak+1) == 0)Tsize += p.streak / 10 * Tsize;
+    Tsize = floor(log(p.streak)/log(10)) + 1;
     text(p.points, width/2 -25, 60);
-    text("x"+p.streak, width - (30 +Tsize*30), height/2);
+    text("x"+p.streak, width - (30 + Tsize*30), height/2);
   }
   if (!p.alive) {
     p.update();
