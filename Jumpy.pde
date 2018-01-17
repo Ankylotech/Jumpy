@@ -5,7 +5,7 @@ OBSTACLE o = new OBSTACLE();
 PLAYER p = new PLAYER();
 boolean pause = false;
 int framerate = 60;
-int Tsize = 1;
+String multiplier;
 STAR[] stars = new STAR[300];
 void setup() {
   size(500, 800);
@@ -41,9 +41,10 @@ void draw() {
     fill(255, 0, 0);
     text(p.leben, 10, 60);
     fill(0, 255, 0);
-    Tsize = floor(log(p.streak)/log(10)) + 1;
     text(p.points, width/2 -25, 60);
-    text("x"+p.streak, width - (30 + Tsize*30), height/2);
+    
+    multiplier = "x"+p.streak;
+    text(multiplier, width - (textWidth(multiplier)), height/2);
   }
   if (!p.alive) {
     p.update();

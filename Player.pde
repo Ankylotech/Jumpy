@@ -63,7 +63,6 @@ public class PLAYER {
         if (leben <= 0) alive = false;
         hit = true;
         streak = 1;
-        Tsize = 1;
         bgt = 0;
         w = size  + (size*streak /50);
         h =w;
