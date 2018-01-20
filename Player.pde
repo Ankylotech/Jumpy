@@ -2,12 +2,14 @@ public class PLAYER {
   PVector pos = new PVector();
   float fv = 0, a = 0.01;
   int max = 1;
-  int v = 5;
+  int hMax = 5;
+  float v = 0;
   int size = 25;
   int w = 25, h = 25;
   float jumps = 20;
-  int leben = 10;
+  int leben = 1;
   int streak = 1;
+  float ha = 0.3;
   boolean hit = false, alive = true;
   boolean right = false;
   boolean left  = false;
@@ -32,8 +34,13 @@ public class PLAYER {
     if (fv + a < max)fv += a;
 
     pos.add(0, fv);
+
     if (pos.y>= height/2)fv = -0.1;
 
+    if (v + ha < hMax && (right||left))v += ha;
+    if (!(right||left)) {
+      v = 0;
+    }
     //rechts
     if (right) pos.add(v, 0);
 
@@ -50,39 +57,44 @@ public class PLAYER {
 
       if (alive)jumps -= 0.2;
       a = -0.1;
-      o.a = - 0.05 + (o.v/10);
+      for (OBSTACLE oi : o) {
+        oi.a = - 0.05 + (oi.v/10);
+      }
     } else {
       jump= false;
       a = 0.02;
-      o.a = 0.05;
+      for (OBSTACLE oi : o) {
+        oi.a = 0.05;
+      }
     }
   }
   void collision() {
     if (!hit) {
-      if (pos.x < o.pos.x && pos.y > o.pos.y-h && pos.y < o.pos.y+50 ||pos.x + w > o.pos.x+100 && pos.y > o.pos.y-h && pos.y < o.pos.y+50  ) {
-        if (leben > 0) leben--;
-        if (leben <= 0) alive = false;
-        hit = true;
-        streak = 1;
-        Tsize = 1;
-        bgt = 0;
-        w = size  + (size*streak /50);
-        h =w;
+      for (OBSTACLE oi : o) {
+        if ((pos.x < oi.pos.x && pos.y > oi.pos.y-h && pos.y < oi.pos.y+oHeight) ||(pos.x + w > oi.pos.x+100 && pos.y > oi.pos.y-h && pos.y < oi.pos.y+oHeight)  ) {
+          if (leben > 0) leben--;
+          if (leben <= 0) alive = false;
+          hit = true;
+          Tsize = 1;
+          bgt = 0;
+          w = size  + (size*streak /50);
+          h =w;
+        }
       }
     }
   }
   void setPoints() {
-
-    if (pos.y -100 > o.pos.y && !hit && !wait) {
-      streak ++; 
-      points += streak-1;
-      w = size  + (size*streak /50);
-      h =w;
-      if (streak %5 == 0) {
-        leben++;
-        jumps+=2;
+    for (OBSTACLE oi : o) {
+      if (pos.y -oHeight+h > oi.pos.y && !hit && !wait) {
+        streak ++; 
+        points += streak-1;
+        w = size  + (size*streak /50);
+        h =w;
+        if (streak %5 == 0) {
+          jumps+=2;
+        }
+        wait =true;
       }
-      wait =true;
     }
   }
   void paintP() {

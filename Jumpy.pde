@@ -1,10 +1,11 @@
 PrintWriter output;
 BufferedReader input;
 int punktzahl = 0;
+int oHeight = 30;
 int bgt = 12;
 int highscore;
 boolean stop = false;
-OBSTACLE o = new OBSTACLE();
+OBSTACLE[] o = new OBSTACLE[3];
 PLAYER p;
 boolean pause = false;
 int framerate = 60;
@@ -12,7 +13,7 @@ int Tsize = 1;
 STAR[] stars = new STAR[300];
 void setup() {
   p =new PLAYER();
-  size(400, 600);
+  size(500, 800);
   frameRate(framerate);
   for (int i = 0; i< stars.length; i++) {
     stars [i] = new STAR();
@@ -22,6 +23,9 @@ void setup() {
     saveBytes("highscore.dat", b);
   } else {
     highscore = bytesToInt(loadBytes("highscore.dat"));
+  }
+  for (int i = 0; i < o.length; i++) {
+    o[i] = new OBSTACLE(height + i*height/o.length);
   }
 }
 
@@ -42,7 +46,9 @@ void draw() {
 
     fill(255, 0, 100);
     p.update();
-    o.update();
+    for (OBSTACLE oi : o) {
+      oi.update();
+    }
     if (p.jump) p.paintJet();
 
     fill(0, 0, 255);
@@ -51,21 +57,23 @@ void draw() {
     fill(255, 0, 0);
     text(p.leben, 10, 60);
     fill(0, 255, 0);
-    if ((10^Tsize) % (p.streak+1) == 0)Tsize += p.streak / 10 * Tsize;
-    text(p.points, width/2 -25, 60);
-    text("highscore:" + highscore, width/2 -150, height-60);
+    Tsize = intLaenge(p.streak);
+    text(p.points, width/2 -(intLaenge(p.points)*15), 60);
+    text("highscore:" + highscore, width/2 -((9+intLaenge(highscore))*14.5), height-60);
     text("x"+p.streak, width - (30 +Tsize*30), height/2);
   }
   if (!p.alive) {
     p.update();
     if (p.jump) p.paintJet();
 
-    if (p.points > highscore) highscore = p.points;
-    saveBytes("highscore.dat", intToBytes(highscore));
+    if (p.points > highscore) { 
+      highscore = p.points;
+      saveBytes("highscore.dat", intToBytes(highscore));
+    }
 
     fill(0, 255, 0);
-    text(p.points, width/2 -25, 60);
-    text("highscore:" + highscore, width/2 -150, height-60);
+    text(p.points, width/2 -(intLaenge(p.points)*15), 60);
+    text("highscore:" + highscore, width/2 -((9+intLaenge(highscore))*14.5), height-60);
     text("x"+p.streak, width-60, height/2);
     fill(255, 0, 0, 100);
     rect(0, 0, width, height);
@@ -77,12 +85,16 @@ void draw() {
   }
 }
 void reset() {
+  p.h = p.size;
+  p.w = p.size;
   p.points = 0;
   p.streak = 1;
-  o.v = 0;
-  o.oReset();
+  for (int i = 0; i < o.length; i++) {
+    o[i].v = 0;
+    o[i].oReset(height + i*height/o.length);
+  }
   p.pos.y = 100;
-  p.leben = 10;
+  p.leben = 1;
   p.jumps= 20;
   p.alive = true;
 }
@@ -118,7 +130,9 @@ void keyReleased() {
   if (key == 'w') {
     p.jump= false;
     p.a = 0.02 ;
-    o.a = 0.1 ;
+    for (OBSTACLE oi : o) {
+      oi.a = 0.1;
+    }
   }
   if ( key == 'a') {
     p.left = false;
@@ -152,6 +166,13 @@ int bytesToInt(byte[] b) {
   int returnValue = 0;
   for (byte by : b) {
     returnValue += int(by);
+  }
+  return returnValue;
+}
+int intLaenge(int x) {
+  int returnValue = 1;
+  while ((pow(10, returnValue))<=x) {
+    returnValue++;
   }
   return returnValue;
 }
