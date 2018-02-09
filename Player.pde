@@ -26,6 +26,7 @@ public class PLAYER {
     bewegung();
     collision();
     setPoints();
+    paintS();
     paintP();
     if (!jump && jumps <100) jumps += 0.02;
   }
@@ -75,7 +76,6 @@ public class PLAYER {
           if (leben > 0) leben--;
           if (leben <= 0) alive = false;
           hit = true;
-          Tsize = 1;
           bgt = 0;
           w = size  + (size*streak /50);
           h =w;
@@ -91,14 +91,14 @@ public class PLAYER {
         w = size  + (size*streak /50);
         h =w;
         if (streak %5 == 0) {
-          jumps+=2;
+          jumps+=(streak/5);
         }
         wait =true;
       }
     }
   }
   void paintP() {
-
+    fill(255, 0, 100);
     if (pos.x> width)pos.set(1, pos.y);
     if (pos.x <= 0)pos.set(width, pos.y);
     if (pos.x + w <= width && pos.x>= 0) {
@@ -112,5 +112,31 @@ public class PLAYER {
         rect(width-pos.x, pos.y, w, h);
       }
     }
+  }
+  void paintS() {
+    float shadowLength = 0.00035;
+    float TRD = sqrt(sq(pos.x+w-lightX)+sq(pos.y-lightY));
+    float factor = (TRD*shadowLength);
+    float sTRX = (pos.x+w+factor*(pos.x+w-lightX));
+    float sTRY = (pos.y+factor*(pos.y-lightY));
+    TRD = sqrt(sq(pos.x+w-lightX)+sq(pos.y+h-lightY));
+    factor = (TRD*shadowLength);
+    float sBRX = (pos.x+w+factor*(pos.x+w-lightX));
+    float sBRY = (pos.y+h+factor*(pos.y+h-lightY));
+    TRD = sqrt((pos.x-lightX)*(pos.x-lightX)+(pos.y-lightY)*(pos.y-lightY));
+    factor = (TRD*shadowLength);
+    float sTLX = (pos.x+factor*(pos.x-lightX));
+    float sTLY = (pos.y+factor*(pos.y-lightY));
+    TRD = sqrt(sq(pos.x-lightX)+sq(pos.y+h-lightY));
+    factor = (TRD*shadowLength);
+    float sBLX = (pos.x+factor*(pos.x-lightX));
+    float sBLY = (pos.y+h+factor*(pos.y+h-lightY));
+
+    fill(0, 60);
+    quad(pos.x+w, pos.y, pos.x+w, pos.y+h, sBRX, sBRY, sTRX, sTRY);
+    quad(pos.x, pos.y+h, pos.x+w, pos.y+h, sBRX, sBRY, sBLX, sBLY);
+    quad(pos.x, pos.y, pos.x, pos.y+h, sBLX, sBLY, sTLX, sTLY);
+    quad(pos.x, pos.y, pos.x+w, pos.y, sTRX, sTRY, sTLX, sTLY);
+    quad(sBRX, sBRY, sTRX, sTRY, sTLX, sTLY, sBLX, sBLY);
   }
 }

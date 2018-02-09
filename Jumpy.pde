@@ -1,9 +1,12 @@
 PrintWriter output;
+int lightX;
+int lightY;
 BufferedReader input;
 int punktzahl = 0;
 int oHeight = 30;
 int bgt = 12;
 int highscore;
+int gapSize = 100;
 boolean stop = false;
 OBSTACLE[] o = new OBSTACLE[3];
 PLAYER p;
@@ -27,6 +30,8 @@ void setup() {
   for (int i = 0; i < o.length; i++) {
     o[i] = new OBSTACLE(height + i*height/o.length);
   }
+  lightX = width/2;
+  lightY = 150;
 }
 
 void draw() {
@@ -74,7 +79,7 @@ void draw() {
     fill(0, 255, 0);
     text(p.points, width/2 -(intLaenge(p.points)*15), 60);
     text("highscore:" + highscore, width/2 -((9+intLaenge(highscore))*14.5), height-60);
-    text("x"+p.streak, width-60, height/2);
+    text("x"+p.streak, width-(30 +Tsize*30), height/2);
     fill(255, 0, 0, 100);
     rect(0, 0, width, height);
     fill(255, 100, 0);
@@ -83,6 +88,8 @@ void draw() {
     textSize(50);
     text(" press'r' to restart!", width/2-225, height/2 +50);
   }
+  lightX =(int) p.pos.x;
+  lightY = (int) p.pos.y;
 }
 void reset() {
   p.h = p.size;
@@ -146,10 +153,8 @@ boolean fileExists(String path) {
   File file=new File(path);
   boolean exists = file.exists();
   if (exists) {
-    println("true");
     return true;
   } else {
-    println("false");
     return false;
   }
 }
